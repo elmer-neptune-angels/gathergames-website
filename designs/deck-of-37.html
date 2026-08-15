@@ -1,0 +1,323 @@
+<!-- GatherGames landing page concept 4 of 4 — "Deck of 37"
+     Direction: risograph print / game-box tactility. The product is a collection, so the collection is the hero.
+     AT LAUNCH: set the App Store href (search for data-appstore), swap in the real 37 titles, change <title> to "GatherGames". -->
+<title>Deck of 37</title>
+<meta name="description" content="GatherGames — thirty-seven local-multiplayer games in one app for iPhone and iPad.">
+<style>
+  :root {
+    --paper:   #EFF0EC;
+    --card:    #FBFBF9;
+    --ink:     #16161D;
+    --ink-2:   #5E606B;
+    --hair:    #D6D8D1;
+    --blue:    #2B44C7;
+    --pink:    #FF4E86;
+
+    /* Slab first, then a real serif — never let this fall back to a monospace face. */
+    --slab: "American Typewriter", Rockwell, "Rockwell Nova", "Bookman Old Style", Georgia, serif;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #131319;
+      --card:  #1C1C25;
+      --ink:   #EFEFE9;
+      --ink-2: #9A9CA8;
+      --hair:  #2C2C38;
+      --blue:  #7A8CFF;
+      --pink:  #FF6E9C;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #131319;
+    --card:  #1C1C25;
+    --ink:   #EFEFE9;
+    --ink-2: #9A9CA8;
+    --hair:  #2C2C38;
+    --blue:  #7A8CFF;
+    --pink:  #FF6E9C;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; color: var(--ink); background: var(--paper);
+    background-image: radial-gradient(circle, color-mix(in srgb, var(--ink) 7%, transparent) 0.7px, transparent 0.7px);
+    background-size: 5px 5px;
+    font-family: var(--sans); font-size: 17px; line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { width: min(1120px, 92vw); margin-inline: auto; }
+  h1, h2, h3 { font-family: var(--slab); margin: 0; text-wrap: balance; font-weight: 700; letter-spacing: -0.01em; line-height: 1.08; }
+  .tag {
+    font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--ink-2);
+  }
+
+  header { border-bottom: 2px solid var(--ink); background: var(--paper); position: sticky; top: 0; z-index: 30; }
+  .nav { display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 0; gap: 1rem; }
+  .mark { font-family: var(--slab); font-weight: 700; font-size: 1.15rem; }
+  .mark b { color: var(--pink); font-weight: 700; }
+  .nav a { color: var(--ink); text-decoration: none; font-size: 0.93rem; }
+  .nav a:hover { color: var(--pink); }
+  .nav .links { display: flex; gap: 1.6rem; }
+  @media (max-width: 760px) { .nav .links { display: none; } }
+
+  /* ---- hero ---- */
+  .hero { padding: clamp(3rem, 8vw, 5.5rem) 0 clamp(3rem, 8vw, 5rem); }
+  .hero-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(2rem, 6vw, 4rem); align-items: center; }
+  @media (max-width: 900px) { .hero-grid { grid-template-columns: 1fr; } }
+  .hero h1 { font-size: clamp(2.6rem, 6.5vw, 4.4rem); line-height: 1.02; max-width: 13ch; margin: 1rem 0 0; }
+  .hero h1 .num { color: var(--pink); }
+  .hero .lede { color: var(--ink-2); font-size: clamp(1.05rem, 2.1vw, 1.25rem); max-width: 44ch; margin: 1.4rem 0 2.3rem; }
+
+  /* fanned deck */
+  .fan { position: relative; height: clamp(300px, 44vw, 380px); display: grid; place-items: center; }
+  .fan .c {
+    position: absolute; width: clamp(132px, 21vw, 168px); aspect-ratio: 5 / 7;
+    border-radius: 14px; border: 2px solid var(--ink); background: var(--card);
+    box-shadow: 6px 8px 0 color-mix(in srgb, var(--ink) 18%, transparent);
+    display: flex; flex-direction: column; justify-content: space-between; padding: 0.8rem;
+    transition: transform 0.35s cubic-bezier(.2,.8,.3,1);
+  }
+  .fan .c:nth-child(1) { transform: rotate(-15deg) translate(-84px, 16px); background: var(--blue); border-color: var(--ink); }
+  .fan .c:nth-child(2) { transform: rotate(-5deg) translate(-30px, -6px); background: var(--pink); }
+  .fan .c:nth-child(3) { transform: rotate(5deg) translate(30px, -6px); }
+  .fan .c:nth-child(4) { transform: rotate(15deg) translate(84px, 16px); background: var(--card); }
+  .fan:hover .c:nth-child(1) { transform: rotate(-20deg) translate(-104px, 20px); }
+  .fan:hover .c:nth-child(4) { transform: rotate(20deg) translate(104px, 20px); }
+  /* Cards overlap, so only the front card carries a full title — the rest show a corner
+     letter in the sliver that stays visible, the way a real fanned hand reads. */
+  .fan .c .corner { font-family: var(--slab); font-size: 1.5rem; line-height: 1; }
+  .fan .c .corner.b { display: none; }
+  .fan .c .mid { display: none; }
+  .fan .c:nth-child(4) .mid { display: block; font-family: var(--slab); font-size: 1.05rem; line-height: 1.15; }
+  .fan .c:nth-child(4) .corner.b { display: block; }
+  .fan .c:nth-child(1), .fan .c:nth-child(2) { color: #FFFFFF; }
+  .fan .c:nth-child(1) .corner, .fan .c:nth-child(2) .corner { color: rgba(255,255,255,0.8); }
+  .fan .c .corner.b { text-align: right; }
+
+  /* ---- App Store button ---- */
+  .cta-row { display: flex; flex-wrap: wrap; gap: 0.9rem 1rem; align-items: center; }
+  .appstore {
+    display: inline-flex; align-items: center; gap: 0.85rem; text-decoration: none;
+    background: var(--ink); color: var(--paper);
+    border: 2px solid var(--ink); border-radius: 12px;
+    padding: 0.8rem 1.5rem 0.85rem 1.2rem;
+    box-shadow: 5px 5px 0 var(--pink);
+    transition: transform 0.14s ease, box-shadow 0.14s ease;
+  }
+  .appstore:hover { transform: translate(2px, 2px); box-shadow: 3px 3px 0 var(--pink); }
+  .appstore:active { transform: translate(5px, 5px); box-shadow: 0 0 0 var(--pink); }
+  .appstore:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+  .appstore svg { width: 25px; height: 29px; fill: currentColor; flex: none; }
+  .appstore .lines { display: grid; text-align: left; line-height: 1.15; }
+  .appstore .small { font-size: 0.66rem; letter-spacing: 0.11em; text-transform: uppercase; opacity: 0.72; }
+  .appstore .big { font-family: var(--slab); font-size: 1.18rem; font-weight: 700; }
+  .stamp {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--blue); border: 2px dashed var(--blue); border-radius: 8px; padding: 0.4rem 0.75rem;
+    transform: rotate(-3deg);
+  }
+
+  /* ---- sections ---- */
+  section { padding: clamp(3.5rem, 8vw, 5.5rem) 0; }
+  .rule { border: none; border-top: 2px solid var(--ink); margin: 0; }
+  .sec-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
+  .sec-head h2 { font-size: clamp(1.7rem, 4vw, 2.6rem); }
+
+  /* ---- the collection grid ---- */
+  .deck { display: grid; grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); gap: 0.7rem; }
+  .tile {
+    aspect-ratio: 5 / 6.4; border: 2px solid var(--ink); border-radius: 10px;
+    background: var(--card); padding: 0.7rem;
+    display: flex; flex-direction: column; justify-content: space-between;
+    transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+  }
+  .tile:hover { transform: translateY(-5px) rotate(-1.5deg); background: var(--pink); color: #FFFFFF; }
+  .tile .n { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.1em; opacity: 0.6; }
+  .tile .t { font-family: var(--slab); font-size: 0.95rem; line-height: 1.15; }
+  /* Face-down cards: a printed back, quiet enough that the named titles lead. */
+  .tile.back {
+    background-image: repeating-linear-gradient(
+      45deg,
+      color-mix(in srgb, var(--blue) 22%, transparent) 0 4px,
+      transparent 4px 9px);
+  }
+  .tile.back .t { color: var(--blue); opacity: 0.75; font-size: 0.8rem; }
+  .tile.back:hover { background-image: none; }
+  .tile.back:hover .t { color: #FFFFFF; opacity: 1; }
+  .deck-note { margin-top: 1.25rem; color: var(--ink-2); font-size: 0.9rem; }
+  /* On a phone the full 37 has to read as a mosaic, not a scroll of empty cards. */
+  @media (max-width: 620px) {
+    .deck { grid-template-columns: repeat(auto-fill, minmax(68px, 1fr)); gap: 0.45rem; }
+    .tile { padding: 0.4rem; border-width: 1.5px; border-radius: 7px; }
+    .tile .t { font-size: 0.56rem; overflow: hidden; }
+    .tile .n { font-size: 0.5rem; }
+    .tile.back .t { display: none; }
+  }
+
+  /* ---- features as overprint blocks ---- */
+  .feats { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
+  .feat { border: 2px solid var(--ink); border-radius: 14px; padding: 1.6rem 1.4rem; background: var(--card); position: relative; }
+  .feat::before {
+    content: ""; position: absolute; inset: -2px; border-radius: 14px;
+    border: 2px solid var(--blue); transform: translate(6px, 6px); z-index: -1;
+  }
+  .feat .k { font-family: var(--slab); font-size: 2.4rem; line-height: 1; color: var(--pink); display: block; margin-bottom: 0.6rem; }
+  .feat h3 { font-size: 1.1rem; margin-bottom: 0.45rem; }
+  .feat p { margin: 0; color: var(--ink-2); font-size: 0.94rem; }
+
+  /* ---- closer ---- */
+  .closer { text-align: center; }
+  .closer h2 { font-size: clamp(2rem, 5vw, 3rem); }
+  .closer p { color: var(--ink-2); max-width: 44ch; margin: 1.1rem auto 2rem; }
+  .closer .cta-row { justify-content: center; }
+  .notify { display: flex; gap: 0.5rem; justify-content: center; margin-top: 2rem; flex-wrap: wrap; }
+  .notify input {
+    font: inherit; font-size: 0.95rem; padding: 0.7rem 1rem; min-width: 250px; color: var(--ink);
+    background: var(--card); border: 2px solid var(--ink); border-radius: 10px;
+  }
+  .notify input:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+  .notify button {
+    font: inherit; font-family: var(--slab); font-weight: 700; padding: 0.7rem 1.4rem; cursor: pointer;
+    border: 2px solid var(--ink); border-radius: 10px; background: var(--pink); color: #FFFFFF;
+  }
+  .notify button:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+
+  footer { border-top: 2px solid var(--ink); padding: 2.25rem 0; color: var(--ink-2); font-size: 0.87rem; }
+  .foot { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+  footer a { color: var(--ink-2); }
+
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+
+<header>
+  <div class="wrap nav">
+    <div class="mark">Gather<b>Games</b></div>
+    <nav class="links">
+      <a href="#collection">The collection</a>
+      <a href="#features">How it plays</a>
+      <a href="#get">Get the app</a>
+    </nav>
+    <a href="#get" class="tag" style="text-decoration: none;">Coming soon</a>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="tag">Local multiplayer · iPhone &amp; iPad</p>
+      <h1><span class="num">37</span> games. One box. Nobody sits out.</h1>
+      <p class="lede">Word, trivia, drawing, storytelling, hidden roles, puzzles and road-trip classics — up to eight players, each on their own device, no internet in sight.</p>
+      <div class="cta-row" id="get">
+        <!-- AT LAUNCH: replace href="#notify" with the App Store URL and delete the stamp -->
+        <a class="appstore" href="#notify" data-appstore>
+          <svg viewBox="0 0 384 512" aria-hidden="true"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+          <span class="lines"><span class="small">Download on the</span><span class="big">App Store</span></span>
+        </a>
+        <span class="stamp">Coming soon</span>
+      </div>
+    </div>
+    <div class="fan" aria-hidden="true">
+      <div class="c"><span class="corner">S</span><span class="mid">Sudoku</span><span class="corner b">S</span></div>
+      <div class="c"><span class="corner">G</span><span class="mid">Glyph</span><span class="corner b">G</span></div>
+      <div class="c"><span class="corner">L</span><span class="mid">License Plate Search</span><span class="corner b">L</span></div>
+      <div class="c"><span class="corner">B</span><span class="mid">Road Trip Bingo</span><span class="corner b">B</span></div>
+    </div>
+  </div>
+</div>
+
+<hr class="rule">
+
+<section id="collection">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>The whole collection, one download.</h2>
+      <span class="tag">37 titles</span>
+    </div>
+    <!-- TODO: replace the placeholder backs with the real 37 titles before launch -->
+    <div class="deck" id="deck">
+      <div class="tile"><span class="n">01</span><span class="t">Road Trip Bingo</span></div>
+      <div class="tile"><span class="n">02</span><span class="t">License Plate Search</span></div>
+      <div class="tile"><span class="n">03</span><span class="t">Glyph</span></div>
+      <div class="tile"><span class="n">04</span><span class="t">Crossword</span></div>
+      <div class="tile"><span class="n">05</span><span class="t">Sudoku</span></div>
+    </div>
+    <p class="deck-note">Trivia · drawing · word · storytelling · hidden role · puzzles · road trip</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section id="features">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>How it plays.</h2>
+      <span class="tag">Four rules, that's it</span>
+    </div>
+    <div class="feats">
+      <div class="feat">
+        <span class="k">8</span>
+        <h3>Players, own devices</h3>
+        <p>Seats fill in tap order. Anyone who misses a seat watches the round live instead of watching over a shoulder.</p>
+      </div>
+      <div class="feat">
+        <span class="k">0</span>
+        <h3>Internet needed</h3>
+        <p>Devices connect straight to each other over Bluetooth and local WiFi. Cars, planes, cabins, campsites.</p>
+      </div>
+      <div class="feat">
+        <span class="k">0</span>
+        <h3>Accounts, ever</h3>
+        <p>No sign-up wall. Sign in with Apple only if you want a name that follows your scores.</p>
+      </div>
+      <div class="feat">
+        <span class="k">∞</span>
+        <h3>Rounds before dinner</h3>
+        <p>Games are short by design. Scores tally as you go and post to global leaderboards next time you're online.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section class="closer" id="notify">
+  <div class="wrap">
+    <h2>Get the box.</h2>
+    <p>GatherGames is in testing now. Leave an email and we'll tell you the day it's on the App Store.</p>
+    <div class="cta-row">
+      <a class="appstore" href="#notify" data-appstore>
+        <svg viewBox="0 0 384 512" aria-hidden="true"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+        <span class="lines"><span class="small">Download on the</span><span class="big">App Store</span></span>
+      </a>
+      <span class="stamp">Coming soon</span>
+    </div>
+    <form class="notify" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Thanks!';">
+      <label for="e4" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);">Email address</label>
+      <input id="e4" type="email" placeholder="you@example.com" required>
+      <button type="submit">Notify me</button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <span>A <a href="https://neptuneangels.com">Neptune Angels</a> product · Manhattan Beach, CA</span>
+    <span><a href="mailto:info@neptuneangels.com">info@neptuneangels.com</a> · © 2026 Neptune Angels LLC</span>
+  </div>
+</footer>
+
+<script>
+  // The five named tiles are real. The remaining 32 render as card backs until the full list lands.
+  (function () {
+    var deck = document.getElementById('deck');
+    for (var i = 6; i <= 37; i++) {
+      var t = document.createElement('div');
+      t.className = 'tile back';
+      t.innerHTML = '<span class="n">' + (i < 10 ? '0' + i : i) + '</span><span class="t">GG</span>';
+      deck.appendChild(t);
+    }
+  })();
+</script>

@@ -1,0 +1,344 @@
+<!-- GatherGames landing page concept 3 of 4 — "No Signal"
+     Direction: Apple-product-page restraint. One idea carries the page: turn the internet off, keep playing.
+     The single accent is iOS airplane-mode orange — the literal color of the switch you flip.
+     AT LAUNCH: set the App Store href (search for data-appstore) and change <title> to "GatherGames". -->
+<title>No Signal</title>
+<meta name="description" content="GatherGames — 37 local-multiplayer games for iPhone and iPad. Works with the internet off.">
+<style>
+  :root {
+    --ground:  #EDF0F3;
+    --surface: #FFFFFF;
+    --ink:     #0F1216;
+    --ink-2:   #5B6472;
+    --hair:    #D3DAE2;
+    --accent:  #F08A00;
+    --frame:   #1A1F26;
+    --screen:  #0B0E12;
+
+    --sans: -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:  #0C0E11;
+      --surface: #15181D;
+      --ink:     #EDF0F4;
+      --ink-2:   #949CA9;
+      --hair:    #262B33;
+      --accent:  #FFA524;
+      --frame:   #2A3039;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground:  #0C0E11;
+    --surface: #15181D;
+    --ink:     #EDF0F4;
+    --ink-2:   #949CA9;
+    --hair:    #262B33;
+    --accent:  #FFA524;
+    --frame:   #2A3039;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--ground); color: var(--ink);
+    font-family: var(--sans); font-size: 17px; line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { width: min(1000px, 90vw); margin-inline: auto; }
+  h1, h2, h3 { margin: 0; letter-spacing: -0.035em; text-wrap: balance; font-weight: 620; }
+  .kicker {
+    font-family: var(--mono); font-size: 0.74rem; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--ink-2);
+  }
+
+  header {
+    position: sticky; top: 0; z-index: 20;
+    background: color-mix(in srgb, var(--ground) 82%, transparent);
+    backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 1px solid var(--hair);
+  }
+  .nav { display: flex; align-items: center; justify-content: space-between; padding: 0.85rem 0; }
+  .mark { font-weight: 620; letter-spacing: -0.03em; font-size: 1.05rem; }
+  .nav a { color: var(--ink-2); text-decoration: none; font-size: 0.92rem; }
+  .nav a:hover { color: var(--ink); }
+  .nav .links { display: flex; gap: 1.6rem; }
+  @media (max-width: 720px) { .nav .links { display: none; } }
+
+  /* ---- hero ---- */
+  .hero { text-align: center; padding: clamp(4rem, 10vw, 7rem) 0 0; }
+  .hero h1 {
+    font-size: clamp(2.6rem, 7vw, 5rem); line-height: 1.03; margin: 1.25rem auto 0; max-width: 15ch;
+  }
+  .hero h1 .off { color: var(--accent); }
+  .hero .lede {
+    color: var(--ink-2); font-size: clamp(1.05rem, 2.2vw, 1.3rem);
+    max-width: 50ch; margin: 1.5rem auto 2.5rem;
+  }
+
+  /* ---- App Store button ---- */
+  .cta { display: flex; flex-direction: column; align-items: center; gap: 0.85rem; }
+  .appstore {
+    display: inline-flex; align-items: center; gap: 0.85rem; text-decoration: none;
+    background: var(--ink); color: var(--ground);
+    padding: 0.9rem 1.75rem 0.95rem 1.4rem; border-radius: 14px;
+    transition: transform 0.18s ease, opacity 0.18s ease;
+  }
+  .appstore:hover { transform: scale(1.03); }
+  .appstore:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+  .appstore svg { width: 25px; height: 29px; fill: currentColor; flex: none; }
+  .appstore .lines { display: grid; text-align: left; line-height: 1.15; }
+  .appstore .small { font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.7; }
+  .appstore .big { font-size: 1.2rem; font-weight: 620; letter-spacing: -0.03em; }
+  .cta .note { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
+
+  /* ---- device ---- */
+  .device-stage { padding: clamp(3rem, 7vw, 5rem) 0 clamp(3rem, 7vw, 5rem); display: grid; place-items: center; }
+  .phone {
+    width: min(300px, 72vw); aspect-ratio: 9 / 17;
+    background: var(--frame); border-radius: 44px; padding: 11px;
+    box-shadow: 0 40px 80px rgba(15, 18, 22, 0.28), 0 2px 0 rgba(255,255,255,0.06) inset;
+  }
+  .screen {
+    height: 100%; border-radius: 34px; background: var(--screen); overflow: hidden;
+    display: flex; flex-direction: column; color: #EEF1F5;
+  }
+  .status {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.85rem 1.2rem 0.4rem; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.04em;
+  }
+  .status .plane { color: var(--accent); display: inline-flex; align-items: center; gap: 0.35rem; }
+  .status .plane svg { width: 12px; height: 12px; fill: currentColor; }
+  .screen-body { flex: 1; display: flex; flex-direction: column; gap: 0.9rem; padding: 1.4rem 1.2rem; }
+  .players { display: flex; gap: 0.35rem; }
+  .pip { flex: 1; height: 4px; border-radius: 2px; background: #2A313C; }
+  .pip.live { background: var(--accent); }
+  .prompt-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: #79828F; }
+  .prompt { font-size: 1.35rem; font-weight: 620; letter-spacing: -0.03em; line-height: 1.15; }
+  .scores { display: grid; gap: 0.4rem; margin-top: 0.4rem; }
+  .scores div {
+    display: flex; justify-content: space-between; font-size: 0.7rem; color: #8C95A1;
+    border-bottom: 1px solid #191E26; padding-bottom: 0.3rem;
+  }
+  .scores div b { color: #DDE3EA; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .answers { display: grid; gap: 0.5rem; margin-top: auto; }
+  .answers div { background: #171C23; border-radius: 10px; padding: 0.6rem 0.75rem; font-size: 0.74rem; color: #C4CBD4; }
+  .answers div.pick { background: var(--accent); color: #16110A; font-weight: 600; }
+
+  /* ---- spec strip ---- */
+  .specs { border-block: 1px solid var(--hair); background: var(--surface); }
+  .spec-grid { display: grid; grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 720px) { .spec-grid { grid-template-columns: repeat(2, 1fr); } }
+  .spec { padding: 2.25rem 1.25rem; text-align: center; border-left: 1px solid var(--hair); }
+  .spec:first-child { border-left: none; }
+  @media (max-width: 720px) { .spec:nth-child(3) { border-left: none; } .spec:nth-child(n+3) { border-top: 1px solid var(--hair); } }
+  .spec .n {
+    font-size: clamp(2.2rem, 5vw, 3rem); font-weight: 620; letter-spacing: -0.05em;
+    font-variant-numeric: tabular-nums; line-height: 1;
+  }
+  .spec .t { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-2); margin-top: 0.7rem; }
+
+  /* ---- feature rows ---- */
+  section { padding: clamp(3.5rem, 8vw, 6rem) 0; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 6vw, 5rem); align-items: center; }
+  .row + .row { margin-top: clamp(3rem, 7vw, 5.5rem); }
+  @media (max-width: 800px) { .row { grid-template-columns: 1fr; gap: 1.75rem; } .row .art { order: -1; } }
+  .row h2 { font-size: clamp(1.6rem, 3.6vw, 2.4rem); margin: 0.9rem 0 0.9rem; line-height: 1.08; }
+  .row p { color: var(--ink-2); margin: 0; max-width: 44ch; }
+  .art {
+    aspect-ratio: 4 / 3; border-radius: 20px; background: var(--surface);
+    border: 1px solid var(--hair); display: grid; place-items: center; overflow: hidden; position: relative;
+  }
+
+  /* art: eight seats */
+  .seat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.85rem; padding: 1.5rem; width: 100%; }
+  .mini {
+    aspect-ratio: 9 / 16; border-radius: 7px; background: var(--ground);
+    border: 1px solid var(--hair);
+  }
+  /* Taken seats read in ink; only the seat that just filled takes the accent. */
+  .mini.on { background: var(--ink); border-color: var(--ink); }
+  .mini.just { background: var(--accent); border-color: var(--accent); }
+
+  /* art: signal bars, struck through */
+  .bars { display: flex; align-items: flex-end; gap: 0.5rem; height: 42%; }
+  .bars i { width: 16px; background: var(--hair); border-radius: 3px; display: block; }
+  .bars i:nth-child(1) { height: 25%; } .bars i:nth-child(2) { height: 45%; }
+  .bars i:nth-child(3) { height: 70%; } .bars i:nth-child(4) { height: 100%; }
+  .slash {
+    position: absolute; top: 50%; left: 50%; width: 34%; height: 3px;
+    background: var(--accent); border-radius: 2px;
+    transform: translate(-50%, -50%) rotate(42deg);
+  }
+
+  /* art: lock */
+  .no-account { display: grid; gap: 0.6rem; width: 62%; }
+  .no-account span { height: 12px; border-radius: 6px; background: var(--hair); display: block; }
+  .no-account span:nth-child(2) { width: 72%; }
+  .no-account span.x { background: var(--accent); width: 40%; }
+
+  /* ---- closer ---- */
+  .closer { text-align: center; border-top: 1px solid var(--hair); }
+  .closer h2 { font-size: clamp(2rem, 5vw, 3.2rem); }
+  .closer p { color: var(--ink-2); max-width: 44ch; margin: 1.2rem auto 2.2rem; }
+  .notify { display: flex; gap: 0.5rem; justify-content: center; margin-top: 2rem; flex-wrap: wrap; }
+  .notify input {
+    font: inherit; font-size: 0.95rem; padding: 0.75rem 1.1rem; min-width: 250px;
+    background: var(--surface); border: 1px solid var(--hair); border-radius: 12px; color: var(--ink);
+  }
+  .notify input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .notify button {
+    font: inherit; font-weight: 600; padding: 0.75rem 1.5rem; border-radius: 12px; cursor: pointer;
+    border: 1px solid var(--ink); background: transparent; color: var(--ink);
+  }
+  .notify button:hover { background: var(--ink); color: var(--ground); }
+  .notify button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+  footer { border-top: 1px solid var(--hair); padding: 2.5rem 0; color: var(--ink-2); font-size: 0.86rem; }
+  .foot { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+  footer a { color: var(--ink-2); }
+
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+
+<header>
+  <div class="wrap nav">
+    <div class="mark">GatherGames</div>
+    <nav class="links">
+      <a href="#specs">Overview</a>
+      <a href="#features">Features</a>
+      <a href="#get">Get the app</a>
+    </nav>
+    <a href="#get">Coming soon</a>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <p class="kicker">iPhone &amp; iPad · 37 games · local multiplayer</p>
+    <h1>Turn the internet <span class="off">off.</span> Keep playing.</h1>
+    <p class="lede">GatherGames runs entirely between the devices in the room — Bluetooth and local WiFi, peer to peer. No signal, no accounts, no setup for anyone.</p>
+    <div class="cta" id="get">
+      <!-- AT LAUNCH: replace href="#notify" with the App Store URL and delete the note below it -->
+      <a class="appstore" href="#notify" data-appstore>
+        <svg viewBox="0 0 384 512" aria-hidden="true"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+        <span class="lines"><span class="small">Download on the</span><span class="big">App Store</span></span>
+      </a>
+      <span class="note">Coming soon · in testing</span>
+    </div>
+  </div>
+  <div class="device-stage">
+    <div class="phone">
+      <div class="screen">
+        <div class="status">
+          <span class="plane">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5L21 16z"/></svg>
+            Airplane Mode
+          </span>
+          <span>4 players · Round 3</span>
+        </div>
+        <div class="screen-body">
+          <div class="players">
+            <span class="pip live"></span><span class="pip live"></span><span class="pip live"></span>
+            <span class="pip live"></span><span class="pip"></span><span class="pip"></span>
+            <span class="pip"></span><span class="pip"></span>
+          </div>
+          <div>
+            <div class="prompt-label">Trivia · 12s</div>
+            <div class="prompt">Which state has the most coastline?</div>
+          </div>
+          <div class="scores">
+            <div><span>Dad</span><b>1,240</b></div>
+            <div><span>Nora</span><b>1,180</b></div>
+            <div><span>Sam</span><b>960</b></div>
+            <div><span>Mom</span><b>905</b></div>
+          </div>
+          <div class="answers">
+            <div>Florida</div>
+            <div>California</div>
+            <div class="pick">Alaska</div>
+            <div>Maine</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="specs" id="specs">
+  <div class="wrap spec-grid">
+    <div class="spec"><div class="n">37</div><div class="t">Games included</div></div>
+    <div class="spec"><div class="n">8</div><div class="t">Players per room</div></div>
+    <div class="spec"><div class="n">0</div><div class="t">Bars required</div></div>
+    <div class="spec"><div class="n">0</div><div class="t">Accounts needed</div></div>
+  </div>
+</div>
+
+<section id="features">
+  <div class="wrap">
+    <div class="row">
+      <div>
+        <p class="kicker">One room, one app</p>
+        <h2>Eight people, eight screens, no cables.</h2>
+        <p>Everyone joins from their own iPhone or iPad. Seats fill in tap order, and anyone who doesn't get one watches the round live as a spectator.</p>
+      </div>
+      <div class="art">
+        <div class="seat-grid">
+          <span class="mini on"></span><span class="mini on"></span><span class="mini on"></span><span class="mini on"></span>
+          <span class="mini just"></span><span class="mini"></span><span class="mini"></span><span class="mini"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div>
+        <p class="kicker">Peer to peer</p>
+        <h2>The devices talk to each other, not to a server.</h2>
+        <p>Bluetooth and local WiFi carry the whole game. Play in the car, on a plane, in a basement, at a cabin with one bar and no patience for it.</p>
+      </div>
+      <div class="art">
+        <div class="bars"><i></i><i></i><i></i><i></i></div>
+        <div class="slash"></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div>
+        <p class="kicker">Nothing to sign up for</p>
+        <h2>Open it and you're playing.</h2>
+        <p>No email, no password, no profile. Sign in with Apple is optional — take it if you want your name to stick to your scores on the global leaderboards, which sync whenever you're next online.</p>
+      </div>
+      <div class="art">
+        <div class="no-account">
+          <span></span><span></span><span class="x"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="closer" id="notify">
+  <div class="wrap">
+    <h2>Be there on day one.</h2>
+    <p>GatherGames is in testing. Leave an email and we'll write once, when it's live.</p>
+    <div class="cta">
+      <a class="appstore" href="#notify" data-appstore>
+        <svg viewBox="0 0 384 512" aria-hidden="true"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+        <span class="lines"><span class="small">Download on the</span><span class="big">App Store</span></span>
+      </a>
+      <span class="note">Coming soon</span>
+    </div>
+    <form class="notify" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Thanks';">
+      <label for="e3" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);">Email address</label>
+      <input id="e3" type="email" placeholder="you@example.com" required>
+      <button type="submit">Notify me</button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <span>A <a href="https://neptuneangels.com">Neptune Angels</a> product · Manhattan Beach, CA</span>
+    <span><a href="mailto:info@neptuneangels.com">info@neptuneangels.com</a> · © 2026 Neptune Angels LLC</span>
+  </div>
+</footer>
