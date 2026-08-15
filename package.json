@@ -1,0 +1,22 @@
+{
+  "name": "gathergames-website",
+  "version": "1.0.0",
+  "description": "Official website for GatherGames",
+  "main": "index.html",
+  "scripts": {
+    "start": "serve -s .",
+    "build": "echo 'No build process needed for static site'",
+    "deploy": "vercel"
+  },
+  "keywords": [
+    "gathergames",
+    "gather",
+    "ios",
+    "games",
+    "local-multiplayer"
+  ],
+  "author": "Elmer",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {}
+}
