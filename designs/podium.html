@@ -1,0 +1,446 @@
+<!-- GatherGames — "Eight Seats" variant A: Podium
+     Keeps the seat-ring hero, adds a full leaderboard section as the third beat of the page.
+     Leaderboard is the payoff, not the pitch.
+
+     NOTE: leaderboard rows use sample data. The stat tiles propose three figures worth
+     surfacing — confirm which the app actually tracks before this ships.
+     AT LAUNCH: set the App Store href (search for data-appstore) and change <title> to "GatherGames". -->
+<title>Podium</title>
+<meta name="description" content="GatherGames — eight players, eight devices, one room. 37 local-multiplayer games for iPhone and iPad.">
+<style>
+  :root {
+    --ink:      #0A0D14;
+    --ink-2:    #10141E;
+    --raised:   #171C29;
+    --line:     #262D3D;
+    --text:     #E8EBF2;
+    --text-2:   #939CB1;
+    --lamp:     #E8A33D;
+    --felt:     #3FB8A6;
+
+    /* Chart marks: in-band steps validated against this dark surface for lightness,
+       chroma, CVD separation and contrast. The brighter lamp/felt above stay UI accents —
+       text and labels never wear a mark color. */
+    --mark-you:   #C0821F;
+    --mark-field: #12A08B;
+    --track:      #1E2534;
+
+    --display: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--ink);
+    color: var(--text);
+    font-family: var(--display);
+    font-size: 17px; line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { width: min(1140px, 92vw); margin-inline: auto; }
+  h1, h2, h3 { margin: 0; text-wrap: balance; letter-spacing: -0.03em; line-height: 1.08; }
+  a { color: var(--lamp); }
+
+  .label {
+    font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--text-2);
+  }
+
+  header { border-bottom: 1px solid var(--line); background: var(--ink); position: sticky; top: 0; z-index: 30; }
+  .nav { display: flex; align-items: center; justify-content: space-between; padding: 1rem 0; gap: 1rem; }
+  .mark { font-weight: 650; font-size: 1.05rem; letter-spacing: -0.02em; color: var(--text); }
+  .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--lamp); margin-right: 0.5rem; vertical-align: 2px; }
+  .nav a { color: var(--text-2); text-decoration: none; font-size: 0.95rem; }
+  .nav a:hover { color: var(--text); }
+  .nav .links { display: flex; gap: 1.75rem; }
+  @media (max-width: 780px) { .nav .links { display: none; } }
+
+  /* ---- hero: the table ---- */
+  .hero {
+    position: relative; overflow: hidden;
+    padding: clamp(3rem, 7vw, 5rem) 0 clamp(2.5rem, 5vw, 3.5rem);
+    background:
+      radial-gradient(120% 80% at 72% 22%, rgba(232,163,61,0.16) 0%, rgba(232,163,61,0) 55%),
+      var(--ink);
+  }
+  .hero-grid { display: grid; grid-template-columns: 1fr 0.9fr; gap: clamp(2rem, 5vw, 4.5rem); align-items: center; }
+  @media (max-width: 900px) { .hero-grid { grid-template-columns: 1fr; } }
+  .hero h1 {
+    font-size: clamp(2.7rem, 6.5vw, 4.6rem); line-height: 1.02; font-weight: 680;
+    margin: 1.5rem 0 0; max-width: 14ch;
+  }
+  .hero h1 .glow { color: var(--lamp); }
+  .hero .lede { color: var(--text-2); font-size: clamp(1.05rem, 2vw, 1.2rem); max-width: 44ch; margin: 1.4rem 0 2.4rem; }
+
+  /* seat ring */
+  .table-wrap { display: grid; place-items: center; }
+  .ring {
+    position: relative; width: min(420px, 78vw); aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 42%, var(--raised) 0%, var(--ink-2) 62%, var(--ink) 100%);
+    box-shadow: inset 0 0 0 1px var(--line), 0 40px 90px rgba(0,0,0,0.6);
+    display: grid; place-items: center;
+  }
+  .ring::before {
+    content: ""; position: absolute; inset: 12%;
+    border-radius: 50%; border: 1px dashed var(--line);
+  }
+  .ring-center { text-align: center; z-index: 2; }
+  .ring-count {
+    font-variant-numeric: tabular-nums; font-size: 3.6rem; font-weight: 680;
+    letter-spacing: -0.04em; line-height: 1; color: var(--text);
+  }
+  .ring-center .label { margin-top: 0.5rem; display: block; }
+  .seat {
+    position: absolute; width: 40px; height: 56px; border-radius: 9px;
+    left: 50%; top: 50%; margin: -28px 0 0 -20px;
+    background: var(--raised); border: 1px solid var(--line);
+    transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+  }
+  .seat::after {
+    content: ""; position: absolute; inset: 6px 6px 10px; border-radius: 4px;
+    background: #0D111A; transition: background 0.35s ease;
+  }
+  .seat.on { border-color: var(--lamp); box-shadow: 0 0 22px rgba(232,163,61,0.35); }
+  .seat.on::after { background: linear-gradient(180deg, var(--lamp), #B87A22); }
+
+  /* ---- App Store button ---- */
+  .cta-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.85rem 1rem; }
+  .appstore {
+    display: inline-flex; align-items: center; gap: 0.85rem; text-decoration: none;
+    background: var(--text); color: var(--ink);
+    padding: 0.8rem 1.6rem 0.85rem 1.3rem; border-radius: 999px;
+    transition: transform 0.16s ease, box-shadow 0.16s ease;
+    box-shadow: 0 0 0 0 rgba(232,163,61,0);
+  }
+  .appstore:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 0 3px rgba(232,163,61,0.35); }
+  .appstore:focus-visible { outline: 3px solid var(--lamp); outline-offset: 3px; }
+  .appstore svg { width: 24px; height: 28px; fill: currentColor; flex: none; }
+  .appstore .lines { display: grid; line-height: 1.15; text-align: left; }
+  .appstore .small { font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase; color: #4A5060; }
+  .appstore .big { font-size: 1.18rem; font-weight: 650; letter-spacing: -0.02em; }
+  .soon {
+    font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--lamp); border: 1px solid rgba(232,163,61,0.4); border-radius: 999px; padding: 0.4rem 0.8rem;
+  }
+
+  /* ---- features ---- */
+  section { padding: clamp(3.5rem, 8vw, 6rem) 0; }
+  .sec-head { max-width: 46ch; margin-bottom: 3rem; }
+  .sec-head h2 { font-size: clamp(1.9rem, 4.5vw, 3rem); font-weight: 650; margin-top: 0.9rem; }
+  .sec-head p { color: var(--text-2); margin: 1rem 0 0; }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
+  .card { background: var(--ink-2); padding: 2rem 1.75rem; }
+  .card .k {
+    font-variant-numeric: tabular-nums; font-size: 2.6rem; font-weight: 680; letter-spacing: -0.04em;
+    line-height: 1; color: var(--felt); display: block; margin-bottom: 0.9rem;
+  }
+  .card h3 { font-size: 1.1rem; font-weight: 620; margin-bottom: 0.5rem; }
+  .card p { color: var(--text-2); font-size: 0.95rem; margin: 0; }
+
+  /* ---- how strip ---- */
+  .strip { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--ink-2); }
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5rem; }
+  @media (max-width: 800px) { .steps { grid-template-columns: 1fr; gap: 2rem; } }
+  .step h3 { font-size: 1.15rem; font-weight: 620; margin: 0.75rem 0 0.4rem; }
+  .step p { color: var(--text-2); font-size: 0.95rem; margin: 0; }
+  .step .n {
+    width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center;
+    border: 1px solid var(--felt); color: var(--felt);
+    font-family: var(--mono); font-size: 0.8rem;
+  }
+
+  /* ---- closer ---- */
+  .closer { text-align: center; }
+  .closer h2 { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 650; }
+  .closer p { color: var(--text-2); max-width: 42ch; margin: 1.2rem auto 2.2rem; }
+  .closer .cta-row { justify-content: center; }
+  .notify { display: flex; gap: 0.5rem; justify-content: center; margin-top: 2.2rem; flex-wrap: wrap; }
+  .notify input {
+    font: inherit; font-size: 0.95rem; padding: 0.75rem 1.1rem; min-width: 250px;
+    background: var(--ink-2); border: 1px solid var(--line); border-radius: 999px; color: var(--text);
+  }
+  .notify input::placeholder { color: #5C6478; }
+  .notify input:focus-visible { outline: 2px solid var(--lamp); outline-offset: 2px; }
+  .notify button {
+    font: inherit; font-weight: 620; padding: 0.75rem 1.5rem; border-radius: 999px; cursor: pointer;
+    border: 1px solid var(--felt); background: transparent; color: var(--felt);
+  }
+  .notify button:hover { background: var(--felt); color: var(--ink); }
+  .notify button:focus-visible { outline: 2px solid var(--felt); outline-offset: 3px; }
+
+  footer { border-top: 1px solid var(--line); padding: 2.5rem 0; color: var(--text-2); font-size: 0.88rem; }
+  .foot { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+  footer a { color: var(--text-2); }
+
+  /* ---- leaderboard ---- */
+  .board-grid { display: grid; grid-template-columns: 1.45fr 0.55fr; gap: 1.5rem; align-items: start; }
+  @media (max-width: 880px) { .board-grid { grid-template-columns: 1fr; } }
+
+  .board { background: var(--ink-2); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
+  .board-head {
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    padding: 1rem 1.25rem; border-bottom: 1px solid var(--line); flex-wrap: wrap;
+  }
+  .board-list { list-style: none; margin: 0; padding: 0; }
+  .brow {
+    display: grid; grid-template-columns: 1.6rem 1fr auto; align-items: center; gap: 1rem;
+    padding: 0.75rem 1.25rem; border-bottom: 1px solid var(--line);
+  }
+  .brow:last-child { border-bottom: none; }
+  .brow .rank {
+    font-family: var(--mono); font-size: 0.8rem; color: var(--text-2);
+    font-variant-numeric: tabular-nums; text-align: right;
+  }
+  .brow .who { min-width: 0; }
+  .brow .nm { font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem; }
+  .brow .tagme {
+    font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--lamp); border: 1px solid rgba(232,163,61,0.45); border-radius: 999px; padding: 0.1rem 0.4rem;
+  }
+  .brow .track { height: 8px; border-radius: 4px; background: var(--track); margin-top: 0.5rem; }
+  .brow .fill { display: block; height: 100%; background: var(--mark-field); border-radius: 0 4px 4px 0; }
+  .brow .score { font-variant-numeric: tabular-nums; font-weight: 620; font-size: 1rem; }
+  .brow.you { background: #141A26; box-shadow: inset 3px 0 0 var(--lamp); }
+  .brow.you .fill { background: var(--mark-you); }
+
+  .tiles { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
+  .tile { background: var(--ink-2); padding: 1.5rem 1.5rem 1.6rem; }
+  .tile .tval {
+    font-size: 2.3rem; font-weight: 680; letter-spacing: -0.045em; line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .tile .tval small { font-size: 1.1rem; font-weight: 620; color: var(--text-2); letter-spacing: -0.02em; }
+  .tile .tlab { display: block; margin-top: 0.6rem; }
+  .tile p { color: var(--text-2); font-size: 0.88rem; margin: 0.5rem 0 0; }
+
+  .board-foot { padding: 0.9rem 1.25rem; border-top: 1px solid var(--line); color: var(--text-2); font-size: 0.85rem; }
+
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+
+<header>
+  <div class="wrap nav">
+    <div class="mark"><span class="dot"></span>GatherGames</div>
+    <nav class="links">
+      <a href="#features">Features</a>
+      <a href="#leaderboard">Leaderboards</a>
+      <a href="#how">How it works</a>
+      <a href="#get">Get the app</a>
+    </nav>
+    <a href="#get" class="label" style="text-decoration: none;">Coming soon</a>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="label">37 games · iPhone &amp; iPad · no internet</span>
+      <h1>Eight people. <span class="glow">One room.</span> Zero setup.</h1>
+      <p class="lede">Everyone plays on their own device. The devices find each other over Bluetooth and local WiFi — no signal, no accounts, no waiting for anyone to download anything.</p>
+      <div class="cta-row" id="get">
+        <!-- AT LAUNCH: replace href="#notify" with the App Store URL and delete the "Coming soon" pill -->
+        <a class="appstore" href="#notify" data-appstore>
+          <svg viewBox="0 0 384 512" aria-hidden="true"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+          <span class="lines"><span class="small">Download on the</span><span class="big">App Store</span></span>
+        </a>
+        <span class="soon">In testing now</span>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <div class="ring" id="ring" aria-hidden="true">
+        <div class="ring-center">
+          <div class="ring-count"><span id="count">0</span>/8</div>
+          <span class="label">Seats taken</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section id="features">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="label">What you get</span>
+      <h2>A game night that fits in a pocket.</h2>
+      <p>One download covers the whole shelf — and it works in places where nothing else does.</p>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <span class="k">37</span>
+        <h3>Games, one app</h3>
+        <p>Trivia, drawing, word, storytelling, hidden-role and puzzles — plus road trip staples like Bingo and License Plate Search.</p>
+      </div>
+      <div class="card">
+        <span class="k">8</span>
+        <h3>Players at once</h3>
+        <p>Seats fill in tap order. Everyone past eight watches the round live, so nobody sits out of the joke.</p>
+      </div>
+      <div class="card">
+        <span class="k">0</span>
+        <h3>Internet required</h3>
+        <p>Peer-to-peer over Bluetooth and local WiFi. Basements, planes, cabins, tunnels — it doesn't care.</p>
+      </div>
+      <div class="card">
+        <span class="k">0</span>
+        <h3>Accounts to create</h3>
+        <p>Open and play. Sign in with Apple is optional, and only if you want your name on the leaderboards.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="leaderboard">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="label">After the round</span>
+      <h2>Play with no signal. Climb anyway.</h2>
+      <p>Scores tally on the spot, offline. Next time a device touches WiFi, the round posts to the global leaderboards — so a game in the car still counts for something.</p>
+    </div>
+    <div class="board-grid">
+      <div class="board">
+        <div class="board-head">
+          <span class="label">Global · Road Trip Bingo</span>
+          <span class="label">This week</span>
+        </div>
+        <!-- Sample data. Bars are one series (score); the amber row is you, direct-labelled. -->
+        <ol class="board-list">
+          <li class="brow">
+            <span class="rank">1</span>
+            <span class="who"><span class="nm">Marisol R.</span><span class="track"><span class="fill" style="width:100%"></span></span></span>
+            <span class="score">12,480</span>
+          </li>
+          <li class="brow">
+            <span class="rank">2</span>
+            <span class="who"><span class="nm">Theo K.</span><span class="track"><span class="fill" style="width:94%"></span></span></span>
+            <span class="score">11,720</span>
+          </li>
+          <li class="brow">
+            <span class="rank">3</span>
+            <span class="who"><span class="nm">Priya N.</span><span class="track"><span class="fill" style="width:88%"></span></span></span>
+            <span class="score">10,950</span>
+          </li>
+          <li class="brow you">
+            <span class="rank">4</span>
+            <span class="who"><span class="nm">Elmer <span class="tagme">You</span></span><span class="track"><span class="fill" style="width:84%"></span></span></span>
+            <span class="score">10,410</span>
+          </li>
+          <li class="brow">
+            <span class="rank">5</span>
+            <span class="who"><span class="nm">Dani W.</span><span class="track"><span class="fill" style="width:79%"></span></span></span>
+            <span class="score">9,860</span>
+          </li>
+          <li class="brow">
+            <span class="rank">6</span>
+            <span class="who"><span class="nm">Jonah B.</span><span class="track"><span class="fill" style="width:71%"></span></span></span>
+            <span class="score">8,890</span>
+          </li>
+        </ol>
+        <div class="board-foot">Last synced 2 hours ago · 6 of 1,204 players shown</div>
+      </div>
+      <div class="tiles">
+        <div class="tile">
+          <div class="tval">#4</div>
+          <span class="label tlab">Your best rank</span>
+          <p>Across every game you've played this week.</p>
+        </div>
+        <div class="tile">
+          <div class="tval">214</div>
+          <span class="label tlab">Rounds played</span>
+          <p>Most of them nowhere near a cell tower.</p>
+        </div>
+        <div class="tile">
+          <div class="tval">12,480</div>
+          <span class="label tlab">Score to beat</span>
+          <p>The number at the top of the board right now.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="strip">
+  <section id="how" style="padding-block: clamp(3rem, 6vw, 4.5rem);">
+    <div class="wrap steps">
+      <div class="step">
+        <div class="n">1</div>
+        <h3>Someone opens a room</h3>
+        <p>No name to pick, no code to read out loud.</p>
+      </div>
+      <div class="step">
+        <div class="n">2</div>
+        <h3>Everyone else taps join</h3>
+        <p>Nearby devices appear on their own. Seats fill as people tap.</p>
+      </div>
+      <div class="step">
+        <div class="n">3</div>
+        <h3>Play, then sync later</h3>
+        <p>When you're back on WiFi, scores post to the global leaderboards.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<section class="closer" id="notify">
+  <div class="wrap">
+    <h2>Save a seat.</h2>
+    <p>GatherGames is in testing. Leave your email and we'll send one message — the day it hits the App Store.</p>
+    <div class="cta-row">
+      <a class="appstore" href="#notify" data-appstore>
+        <svg viewBox="0 0 384 512" aria-hidden="true"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+        <span class="lines"><span class="small">Download on the</span><span class="big">App Store</span></span>
+      </a>
+      <span class="soon">Coming soon</span>
+    </div>
+    <form class="notify" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Seat saved';">
+      <label for="e2" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);">Email address</label>
+      <input id="e2" type="email" placeholder="you@example.com" required>
+      <button type="submit">Notify me</button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <span>A <a href="https://neptuneangels.com">Neptune Angels</a> product · Manhattan Beach, CA</span>
+    <span><a href="mailto:info@neptuneangels.com">info@neptuneangels.com</a> · © 2026 Neptune Angels LLC</span>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var ring = document.getElementById('ring');
+    var count = document.getElementById('count');
+    var seats = [];
+    for (var i = 0; i < 8; i++) {
+      var s = document.createElement('div');
+      s.className = 'seat';
+      ring.appendChild(s);
+      seats.push(s);
+    }
+    // Position seats relative to the ring's real size so it scales on small screens.
+    // Seats stay upright — eight phones set down around a table, not a pinwheel.
+    function place() {
+      var r = ring.getBoundingClientRect().width * 0.36;
+      seats.forEach(function (s, i) {
+        var a = (i / 8) * Math.PI * 2 - Math.PI / 2;
+        s.style.transform = 'translate(' + (Math.cos(a) * r).toFixed(2) + 'px, ' + (Math.sin(a) * r).toFixed(2) + 'px)';
+      });
+    }
+    place();
+    window.addEventListener('resize', place);
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      seats.forEach(function (s) { s.classList.add('on'); });
+      count.textContent = '8';
+      return;
+    }
+    var n = 0;
+    setInterval(function () {
+      if (n < 8) { seats[n].classList.add('on'); n++; }
+      else { seats.forEach(function (s) { s.classList.remove('on'); }); n = 0; }
+      count.textContent = n;
+    }, 750);
+  })();
+</script>
