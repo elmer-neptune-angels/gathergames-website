@@ -1,60 +1,57 @@
-/**
- * JavaScript for Neptune Angels website
- * Handles smooth scrolling and dynamic effects
- */
+/* Seat ring: eight phones set down around a table, filling in tap order.
+   Stays upright rather than pinwheeling, and holds still if the visitor
+   has asked for reduced motion. */
+(function () {
+  'use strict';
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Smooth scrolling for navigation links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            
-            const targetId = this.getAttribute('href');
-            const targetElement = document.querySelector(targetId);
-            
-            if (targetElement) {
-                window.scrollTo({
-                    top: targetElement.offsetTop - 80, // Adjust for header height
-                    behavior: 'smooth'
-                });
-            }
-        });
-    });
+  var ring = document.getElementById('ring');
+  var count = document.getElementById('count');
+  if (!ring || !count) { return; }
 
-    // Header scroll effect
-    const header = document.querySelector('.header');
-    
-    window.addEventListener('scroll', function() {
-        if (window.scrollY > 50) {
-            header.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
-        } else {
-            header.style.boxShadow = '0 1px 2px rgba(0, 0, 0, 0.05)';
-        }
-    });
+  var SEATS = 8;
+  var seats = [];
 
-    // Animate elements on scroll
-    const animateOnScroll = function() {
-        const elements = document.querySelectorAll('.card, .about-content, .contact, .portfolio h2');
-        
-        elements.forEach(element => {
-            const elementPosition = element.getBoundingClientRect().top;
-            const screenPosition = window.innerHeight / 1.3;
-            
-            if (elementPosition < screenPosition) {
-                element.style.opacity = '1';
-                element.style.transform = 'translateY(0)';
-            }
-        });
-    };
-    
-    // Set initial state for animated elements
-    document.querySelectorAll('.card, .about-content, .contact, .portfolio h2').forEach(element => {
-        element.style.opacity = '0';
-        element.style.transform = 'translateY(20px)';
-        element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+  for (var i = 0; i < SEATS; i++) {
+    var seat = document.createElement('div');
+    seat.className = 'seat';
+    ring.appendChild(seat);
+    seats.push(seat);
+  }
+
+  // Positioned off the ring's rendered size so it scales with the viewport.
+  function place() {
+    var radius = ring.getBoundingClientRect().width * 0.36;
+    seats.forEach(function (seat, index) {
+      var angle = (index / SEATS) * Math.PI * 2 - Math.PI / 2;
+      seat.style.transform =
+        'translate(' + (Math.cos(angle) * radius).toFixed(2) + 'px, ' +
+        (Math.sin(angle) * radius).toFixed(2) + 'px)';
     });
-    
-    // Run on load and scroll
-    animateOnScroll();
-    window.addEventListener('scroll', animateOnScroll);
-});
+  }
+
+  place();
+
+  var resizeTimer;
+  window.addEventListener('resize', function () {
+    window.clearTimeout(resizeTimer);
+    resizeTimer = window.setTimeout(place, 120);
+  });
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    seats.forEach(function (seat) { seat.classList.add('on'); });
+    count.textContent = String(SEATS);
+    return;
+  }
+
+  var filled = 0;
+  window.setInterval(function () {
+    if (filled < SEATS) {
+      seats[filled].classList.add('on');
+      filled++;
+    } else {
+      seats.forEach(function (seat) { seat.classList.remove('on'); });
+      filled = 0;
+    }
+    count.textContent = String(filled);
+  }, 750);
+})();

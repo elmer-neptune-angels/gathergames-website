@@ -5,7 +5,39 @@ Temporary one-page marketing site for [GatherGames](https://gathergames.io) — 
 Static site (plain HTML/CSS/JS), deployed on Vercel. Push to `main` auto-deploys.
 
 - App source: `elmer-neptune-angels/gather` (private)
-- Style mirrors `elmer-neptune-angels/neptune-angels-website`
+
+## The live page
+
+`index.html` / `styles.css` / `script.js` are the **Warm Canvas** design, built on the iOS app's own
+design system so the site and the app read as one product. Everything below is inherited from
+`elmer-neptune-angels/gather`:
+
+- **Palette** — `App/Theme/AppTheme.swift` ("Modern Data-Rich Calm"): canvas `#F7F5F1`, ink
+  `#26303A`, household teal `#2F6D6A`, householdSoft `#E4EEEC`, line `#E7E3DB`.
+- **Leaderboard row** — `App/Views/LeaderboardPaceRow.swift`: pace bar (fill = record ÷ that row's
+  value), 4px medal stripe (gold `#C9A544`, silver `#A9B2BC`, bronze `#B3805A`), viewer row in
+  householdSoft, `▲2` movement chip in positive green.
+- **Metric tabs** — `LeaderboardMetric` in `App/LeaderboardPresentation.swift`: Avg Time, Points,
+  Fastest, Pairs. Board splits and the `+2.1s` gap caption come from the same file.
+- **Stat figures** — `docs/LEADERBOARD_STATS.md`: games played, wins/losses, best room win streak,
+  and the per-game metrics actually collected.
+
+A dark theme is derived from the same tokens (the app itself is light-only). No build step, no
+external fonts or CDNs, so the page renders identically offline.
+
+**Still open before launch:**
+
+1. **App Store link** — search `index.html` for `AT LAUNCH`. The button's `href="#notify"` becomes
+   the real App Store URL and the "In testing" / "Coming soon" pills come out. Apple's marketing
+   guidelines ask for their supplied badge artwork on live pages; swap the custom button for it then.
+2. **Leaderboard rows are illustrative.** Names, avatars and times in the hero board are made up.
+   Replace with real standings, or a static "example board" caption, before this is a live claim.
+3. **`og:image`** — no share artwork exists yet; the `TODO` in `<head>` marks where it goes.
+4. **Notify** — the closer links to `mailto:info@neptuneangels.com` rather than faking a signup
+   form. Swap in Formspree/Buttondown when a list exists.
+5. **Game count** — the page says "45+ games", from `Sources/GatherCore/Resources/game-matrix.json`
+   (45 entries, all `implemented`, 39 leaderboard-eligible). Note the `gather` README still says 37;
+   worth reconciling.
 
 ## Landing page concepts
 
@@ -64,22 +96,6 @@ because the app's UI tints fall outside the legible band on a dark ground.
 Each page is self-contained (no build step, no external fonts or CDNs) and carries the same
 content, so picking one is a design decision rather than a copy decision.
 
-Before going live with whichever wins:
-
-1. **App Store link** — search each file for `AT LAUNCH`. The button's `href="#notify"` becomes the
-   real App Store URL, and the "Coming soon" marker next to it comes out.
-2. **Apple badge** — the buttons are custom-styled. Apple's marketing guidelines ask for their
-   supplied badge artwork on live pages; swap it in at that point.
-3. **Notify form** — the email capture is a stub that only updates its own button. Point it at a
-   real list (Formspree, Buttondown, ConvertKit) before shipping.
-4. **Game titles** — `Deck of 37` and `Back Seat` show the five known titles and render the rest as
-   placeholders. Search for `TODO` to drop in the full list.
-5. **Stats** — Podium/Top Table/Career use invented stat types; the three app-system variants use
-   real ones from `docs/LEADERBOARD_STATS.md`. Prefer the latter.
-6. **Game count** — every page says "37 games", matching this repo and the `gather` README. But
-   `Sources/GatherCore/Resources/game-matrix.json` lists **45** games, all flagged `implemented`,
-   39 of them leaderboard-eligible. Confirm the real number before launch; it appears in the hero,
-   the feature cards and the meta description.
-7. **Typography** — the pages use system font stacks so they load instantly and render identically
-   offline. If you want more character, `Back Seat` and `Deck of 37` are the two that would gain
-   most from a licensed display face.
+The concept pages are kept as a record of the alternatives; they are not deployed and still say
+"37 games", carry stub notify forms, and use invented stat types in the Podium/Top Table/Career
+three. `Warm Canvas` is the one that shipped — see the live-page notes above.

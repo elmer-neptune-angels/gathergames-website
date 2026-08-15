@@ -1,115 +1,239 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GatherGames</title>
-    <meta name="description" content="GatherGames — local-multiplayer family games for iPhone and iPad. No internet, no accounts. Just gather and play.">
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GatherGames — Local Multiplayer Games for iPhone &amp; iPad</title>
+  <meta name="description" content="45+ local-multiplayer games for iPhone and iPad. Up to eight devices play together over Bluetooth and local WiFi — no internet, no accounts. Scores post to the global leaderboards when you're back online.">
+  <link rel="canonical" href="https://gathergames.io/">
+  <meta name="theme-color" content="#F7F5F1" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#14191A" media="(prefers-color-scheme: dark)">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="GatherGames">
+  <meta property="og:title" content="GatherGames — Local Multiplayer Games for iPhone &amp; iPad">
+  <meta property="og:description" content="45+ games. Up to eight devices, no internet, no accounts. Play anywhere, then climb the global leaderboards.">
+  <meta property="og:url" content="https://gathergames.io/">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- TODO: add og:image / twitter:image (1200×630) once artwork exists. -->
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232F6D6A'/%3E%3Ctext x='16' y='23' font-family='-apple-system,system-ui,sans-serif' font-size='19' font-weight='700' fill='%23F7F5F1' text-anchor='middle'%3EG%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header class="header">
-        <div class="container">
-            <nav class="navbar">
-                <div class="logo">
-                    <h1>GatherGames</h1>
-                </div>
-                <ul class="nav-links">
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#games">Games</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+  <a class="skip-link" href="#main">Skip to content</a>
 
-    <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1>Play Together, Anywhere</h1>
-                <p>Local-multiplayer family games for iPhone and iPad — no internet, no accounts, no setup. Just gather and play.</p>
-                <a href="#games" class="cta-button">Discover the Games</a>
+  <header class="site-header">
+    <div class="wrap nav">
+      <div class="mark">Gather<span>Games</span></div>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="#features">Features</a>
+        <a href="#leaderboards">Leaderboards</a>
+        <a href="#how">How it works</a>
+        <a href="#get">Get the app</a>
+      </nav>
+      <a href="#get" class="label" style="text-decoration: none;">Coming soon</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="label">45+ games · iPhone &amp; iPad · no internet</p>
+          <h1>Somebody has to be <em>first.</em></h1>
+          <p class="lede">Up to eight devices play together over Bluetooth and local WiFi — no signal, no accounts. Results queue up offline and post to the global leaderboards the next time you're connected.</p>
+          <div class="cta-row" id="get">
+            <!-- AT LAUNCH: replace href="#notify" with the App Store URL, and delete the
+                 "In testing" pill below. Apple's marketing guidelines ask for their supplied
+                 badge artwork on live pages — swap this custom button for it at the same time. -->
+            <a class="appstore" href="#notify" data-appstore>
+              <svg viewBox="0 0 384 512" aria-hidden="true" focusable="false"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+              <span class="lines">
+                <span class="small">Download on the</span>
+                <span class="big">App Store</span>
+              </span>
+            </a>
+            <span class="soon">In testing</span>
+          </div>
+        </div>
+
+        <div class="board" aria-labelledby="board-title">
+          <div class="board-head">
+            <span class="board-title" id="board-title">Glyph · Sprint · 4</span>
+            <span class="label">Global · 20+ games</span>
+          </div>
+          <div class="metrics" aria-hidden="true">
+            <span class="on">Avg Time</span><span>Points</span><span>Fastest</span><span>Pairs</span>
+          </div>
+          <!-- Illustrative standings. Bar fill = record ÷ this row's value, the app's pace encoding. -->
+          <ol class="rows">
+            <li class="prow m1">
+              <span class="pace" style="--pace:100%"><i></i><b></b></span>
+              <span class="rk">#1</span><span class="av" aria-hidden="true">🦊</span>
+              <span class="idn"><span class="nm">Marisol R.</span><span class="cap">126 games</span></span>
+              <span class="mv"></span><span class="val">8.9s</span>
+            </li>
+            <li class="prow m2">
+              <span class="pace" style="--pace:94.7%"><i></i><b></b></span>
+              <span class="rk">#2</span><span class="av" aria-hidden="true">🐢</span>
+              <span class="idn"><span class="nm">Theo K.</span><span class="cap">+0.5s · 88 games</span></span>
+              <span class="mv">▲1</span><span class="val">9.4s</span>
+            </li>
+            <li class="prow m3">
+              <span class="pace" style="--pace:87.3%"><i></i><b></b></span>
+              <span class="rk">#3</span><span class="av" aria-hidden="true">🦉</span>
+              <span class="idn"><span class="nm">Priya N.</span><span class="cap">+1.3s · 74 games</span></span>
+              <span class="mv"></span><span class="val">10.2s</span>
+            </li>
+            <li class="prow you">
+              <span class="pace" style="--pace:80.9%"><i></i><b></b></span>
+              <span class="rk">#4</span><span class="av" aria-hidden="true">🐙</span>
+              <span class="idn"><span class="nm">You</span><span class="cap">+2.1s · 31 games</span></span>
+              <span class="mv">▲2</span><span class="val">11.0s</span>
+            </li>
+            <li class="prow">
+              <span class="pace" style="--pace:70.6%"><i></i><b></b></span>
+              <span class="rk">#5</span><span class="av" aria-hidden="true">🦝</span>
+              <span class="idn"><span class="nm">Dani W.</span><span class="cap">+3.7s · 52 games</span></span>
+              <span class="mv"></span><span class="val">12.6s</span>
+            </li>
+          </ol>
+          <div class="board-foot">
+            <span>Queued offline · uploads when you reconnect</span>
+            <span>Also: Classic · 5 · Master · 6</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section id="features">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="label">What you get</p>
+          <h2>A game night that fits in a pocket.</h2>
+          <p>One download covers the whole shelf — and it works in places where nothing else does.</p>
+        </div>
+        <div class="cards">
+          <div class="card">
+            <span class="k">45+</span>
+            <h3>Games, one app</h3>
+            <p>Glyph, Crossword, Sudoku, Geode, Crossplay and Triangle Gather, plus trivia, drawing, word, storytelling and hidden-role games.</p>
+          </div>
+          <div class="card">
+            <span class="k">8</span>
+            <h3>Devices per room</h3>
+            <p>Everyone plays on their own iPhone or iPad. Individual games keep their own smaller limits where it matters.</p>
+          </div>
+          <div class="card">
+            <span class="k">0</span>
+            <h3>Internet required</h3>
+            <p>Devices connect peer-to-peer over Bluetooth and local WiFi. Basements, planes, cabins, tunnels — it doesn't care.</p>
+          </div>
+          <div class="card">
+            <span class="k">0</span>
+            <h3>Accounts to create</h3>
+            <p>Open and play. Sign in with Apple is optional and only links this device — it's never a wall in front of a game.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="stats-band">
+      <section id="leaderboards">
+        <div class="wrap">
+          <div class="sec-head">
+            <p class="label">What the app keeps</p>
+            <h2>Every round leaves a record.</h2>
+            <p>Results are stored on the host device as you play and uploaded once, idempotently, when connectivity returns. Nothing is lost because you were out of range.</p>
+          </div>
+
+          <div class="stat-grid">
+            <div class="st"><div class="sv">214</div><span class="label sl">Games played</span></div>
+            <div class="st"><div class="sv">31<small> W</small> · 8<small> L</small></div><span class="label sl">Wins and losses</span></div>
+            <div class="st"><div class="sv">6</div><span class="label sl">Best room win streak</span></div>
+            <div class="st"><div class="sv">8.9<small>s</small></div><span class="label sl">Your Glyph record</span></div>
+          </div>
+
+          <ul class="kept">
+            <li><b>Glyph</b> · solved, guesses, average guesses, daily streak</li>
+            <li><b>Sudoku</b> · verified solve time, mistakes, moves</li>
+            <li><b>Crossword</b> · completion time, penalties, hints</li>
+            <li><b>Memory</b> · pairs per flip, wins, win percentage</li>
+            <li><b>Crossplay</b> · board score, tiles played, longest word</li>
+            <li><b>High-Low</b> · correct calls, attempts, accuracy</li>
+            <li><b>Geode</b> · solve time, grow commits</li>
+            <li><b>Triangle Gather</b> · triangles claimed</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+
+    <section id="how">
+      <div class="wrap how-grid">
+        <div class="ring-wrap">
+          <div class="ring" id="ring" aria-hidden="true">
+            <div class="ring-center">
+              <div class="ring-count"><span id="count">0</span>/8</div>
+              <span class="label">Seats taken</span>
             </div>
+          </div>
         </div>
-    </section>
-
-    <section id="about" class="about">
-        <div class="container">
-            <div class="about-content">
-                <div class="about-text">
-                    <h2>About GatherGames</h2>
-                    <p>GatherGames is a local-multiplayer game collection for iPhone and iPad. Everyone plays on their own device, connecting peer-to-peer over Bluetooth and local WiFi — so gameplay needs no account and no internet connection.</p>
-                    <p>From road trip classics to word, trivia, drawing, and hidden-role games, up to eight players can jump in instantly. When you're back online, results can sync to global leaderboards.</p>
-                </div>
-                <div class="about-visual">
-                    <div class="data-visualization">
-                        <!-- Abstract data visualization will be implemented with SVG/Canvas -->
-                    </div>
-                </div>
+        <div>
+          <p class="label">Getting to the table</p>
+          <h2 style="font-size: clamp(1.7rem, 3.6vw, 2.4rem); margin-top: 0.85rem;">Eight seats, filled in tap order.</h2>
+          <div class="steps-v">
+            <div class="step">
+              <div class="n" aria-hidden="true">1</div>
+              <h3>Someone opens a room</h3>
+              <p>No name to pick, no code to read out loud.</p>
             </div>
-        </div>
-    </section>
-
-    <section id="games" class="portfolio">
-        <div class="container">
-            <h2>One Room, Everyone In</h2>
-            <div class="portfolio-cards">
-                <div class="card">
-                    <div class="card-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                        </svg>
-                    </div>
-                    <h3>37 Games</h3>
-                    <p>Road Trip Bingo, License Plate Search, Glyph, Crossword, Sudoku, trivia, drawing, word, storytelling, and hidden-role games.</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                        </svg>
-                    </div>
-                    <h3>Up to 8 Players</h3>
-                    <p>Everyone joins from their own iPhone or iPad. Seats fill in tap order — anyone not playing watches live as a spectator.</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0" />
-                        </svg>
-                    </div>
-                    <h3>No Internet Required</h3>
-                    <p>Devices connect peer-to-peer over Bluetooth and local WiFi. Play in the car, on a plane, at the cabin — anywhere.</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                        </svg>
-                    </div>
-                    <h3>No Accounts</h3>
-                    <p>No sign-ups, no logins — open the app and play. Optional Sign in with Apple for a stable player identity.</p>
-                </div>
+            <div class="step">
+              <div class="n" aria-hidden="true">2</div>
+              <h3>Everyone else taps join</h3>
+              <p>Nearby devices appear on their own. The host device runs the game and keeps the room's records.</p>
             </div>
+            <div class="step">
+              <div class="n" aria-hidden="true">3</div>
+              <h3>Play, then sync later</h3>
+              <p>Back on WiFi, results upload once to the global leaderboards — Avg&nbsp;Time, Points, Fastest and Pairs boards, split by difficulty.</p>
+            </div>
+          </div>
         </div>
+      </div>
     </section>
 
-    <section id="contact" class="contact">
-        <div class="container">
-            <h2>Coming Soon</h2>
-            <p>GatherGames is currently in testing and will be available on the App Store soon.</p>
-            <p>Questions? <a href="mailto:info@neptuneangels.com">info@neptuneangels.com</a></p>
-            <p>A <a href="https://neptuneangels.com">Neptune Angels</a> product · Manhattan Beach, CA</p>
+    <section class="closer" id="notify">
+      <div class="wrap">
+        <h2>Save a seat.</h2>
+        <p>GatherGames is in testing and coming to the App Store soon.</p>
+        <div class="cta-row">
+          <a class="appstore" href="#notify" data-appstore>
+            <svg viewBox="0 0 384 512" aria-hidden="true" focusable="false"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+            <span class="lines">
+              <span class="small">Download on the</span>
+              <span class="big">App Store</span>
+            </span>
+          </a>
+          <span class="soon">Coming soon</span>
         </div>
+        <!-- Real mailto rather than a form stub, so nobody thinks they signed up for a list
+             that doesn't exist yet. Swap for Formspree/Buttondown when one is set up. -->
+        <p class="notify-line">
+          Want a note the day it lands?<br>
+          <a class="notify-link" href="mailto:info@neptuneangels.com?subject=Notify%20me%20when%20GatherGames%20launches">Email us</a>
+        </p>
+      </div>
     </section>
+  </main>
 
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2026 Neptune Angels LLC. All rights reserved.</p>
-        </div>
-    </footer>
+  <footer class="site-footer">
+    <div class="wrap foot">
+      <span>A <a href="https://neptuneangels.com">Neptune Angels</a> product · Manhattan Beach, CA</span>
+      <span><a href="mailto:info@neptuneangels.com">info@neptuneangels.com</a> · &copy; 2026 Neptune Angels LLC</span>
+    </div>
+  </footer>
 
-    <script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
