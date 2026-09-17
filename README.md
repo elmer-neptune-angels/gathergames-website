@@ -39,6 +39,15 @@ external fonts or CDNs, so the page renders identically offline.
    (45 entries, all `implemented`, 39 leaderboard-eligible). Note the `gather` README still says 37;
    worth reconciling.
 
+## Command center
+
+`command/` is the Gather command center: a Next.js + Supabase console (its own Vercel project,
+root directory `command`) that reads the same database the manager portal in
+`elmer-neptune-angels/gather` writes. Rounds by minute/hour/day, DAU/WAU/MAU and retention,
+leaderboards, Apple subscriptions and App Store Connect sales, marketing spend and CAC, system
+health, and the live game switches. See [`command/README.md`](command/README.md) for the pages,
+the deploy steps and the one migration it adds.
+
 ## Landing page concepts
 
 `designs/` holds four full-page concepts for the next version of the landing page. Open
