@@ -23,11 +23,16 @@ the whole page so the numbers agree.
 ## Deploy
 
 1. **Database.** In the Supabase SQL editor (the Legacy Pulse project the portal
-   uses) run `supabase/migrations/043_command_center.sql`. It adds three tables
-   — marketing spend, cached App Store sales, and settings — none of which hold
-   player data. Every page works without it; the Marketing page, the price
-   editor and the sales cache just say so until it is applied. The file is
-   numbered to drop into `gather/portal/supabase/migrations/` unchanged.
+   uses) run the migrations in `supabase/migrations/`, in order. Both are
+   numbered to drop into `gather/portal/supabase/migrations/` unchanged, and
+   neither holds player data.
+   - `043_command_center.sql` adds marketing spend, cached App Store sales and
+     settings. Every page works without it; the Marketing page, the price
+     editor and the sales cache just say so until it is applied.
+   - `044_login_throttle.sql` adds the durable counters behind the sign-in rate
+     limit. Until it is applied the limiter still runs, but only in process,
+     which a caller opening parallel connections can ride through (see
+     **Sign-in** below).
 2. **Vercel.** New Project → import this repo → **Root Directory** `command` →
    environment variables:
    - `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` — the portal's values.
@@ -53,6 +58,31 @@ npm test          # node:test suites for the pure libraries
 npm run typecheck
 npm run build
 ```
+
+## Sign-in
+
+One shared password, as in the portal this was copied from, with two changes
+made because this dashboard sits on a publicly reachable URL and shows revenue
+and player names.
+
+- **Constant-time comparison.** The password and the session cookie are both
+  compared through SHA-256 digests and `timingSafeEqual`, so neither the value
+  nor its length leaks through response timing (`src/lib/auth.ts`).
+- **Rate limiting.** Five failures from one address inside fifteen minutes
+  starts a lockout, doubling with each further failure from one minute up to an
+  hour, and cleared by a correct password. The policy is pure and tested in
+  `src/lib/login-policy.ts`, enforced atomically in SQL by migration 044, and
+  reached through `src/lib/login-throttle.ts`.
+
+The counters live in the database on purpose: Vercel runs this as many
+short-lived serverless instances, so an in-process counter resets under
+parallel load. The in-process map is a fallback for a missing table or an
+unreachable database, and it **fails open** rather than locking the owner out
+of the dashboard during a Supabase outage.
+
+None of this replaces putting the deployment behind your host's own
+authentication. It raises the cost of guessing; it is not a substitute for not
+being reachable.
 
 ## How the numbers are defined
 
