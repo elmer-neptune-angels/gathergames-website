@@ -86,9 +86,17 @@ being reachable.
 
 ## How the numbers are defined
 
-- **A round** is one `game_started` (recorded host-side only, so one per
-  round however many phones joined), plus solo `quick_play_started` and
-  `daily_quick_play_started`.
+- **A round** is one `game_started`, and nothing else. It is host-side only,
+  so one round is one event however many phones joined. Solo and Daily rounds
+  emit it too: `launchSoloGame()` calls `startGame()` and only THEN emits
+  `quick_play_started` or `daily_quick_play_started`, so those markers
+  accompany a round rather than being one, and counting them as rounds counted
+  every Daily and Quick Play twice. They are reported as a breakdown
+  ("launched from the Daily") instead. A marker with no `game_started` is a
+  launch that failed to deal, which is correctly not a round.
+- **Solo** means one player was dealt in, read from `game_started`'s own
+  `players` payload rather than by counting a second event. A one-player round
+  opened inside a room counts as solo.
 - **Active players** are distinct `player_id`s with any event in the trailing
   1 / 7 / 30 days (device id when a batch predates player identity).
 - **Days** are Pacific calendar days, matching the app's Daily boards.

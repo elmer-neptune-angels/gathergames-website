@@ -13,7 +13,7 @@ import {
   loadEvents,
   loadLatestReceivedAt,
   loadRecentEvents,
-  PLAY_EVENTS,
+  isRoundStart,
 } from "@/lib/events";
 import { compact } from "@/lib/format";
 import { gameName } from "@/lib/matrix";
@@ -41,7 +41,7 @@ export default async function OverviewPage() {
       loadHeartbeats(new Date(now.getTime() - DAY), 5).catch(() => ({ beats: [], applied: false })),
     ]);
     const events = window30.events;
-    const isPlay = (e: { name: string }) => PLAY_EVENTS.has(e.name);
+    const isPlay = isRoundStart;
     const todayStart = startOfToday(now);
     const todayKey = dayKey(now);
     const yesterdayKey = dayKey(new Date(todayStart.getTime() - 1000));

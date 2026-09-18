@@ -3,7 +3,7 @@ import RangePicker from "@/components/RangePicker";
 import { BarList, ColumnChart, Heatmap, LineChart } from "@/components/charts";
 import { Card, ErrorBlock, Notice, StatTile } from "@/components/ui";
 import { isAdmin } from "@/lib/auth";
-import { activityByGame, countBy, countSeries, countWhere, distinctActors, loadEvents, PLAY_EVENTS, weekdayHourGrid } from "@/lib/events";
+import { activityByGame, countBy, countSeries, countWhere, distinctActors, isRoundStart, isSoloRound, LAUNCH_DAILY, LAUNCH_QUICK_PLAY, loadEvents, weekdayHourGrid } from "@/lib/events";
 import { compact, duration, percent } from "@/lib/format";
 import { gameName } from "@/lib/matrix";
 import { windowFrom, type SearchParams } from "@/lib/params";
@@ -19,16 +19,23 @@ export default async function PlayPage({ searchParams }: { searchParams: SearchP
   const window = await windowFrom(searchParams);
   try {
     const { events, truncated } = await loadEvents(window.since, window.until);
-    const isPlay = (e: { name: string }) => PLAY_EVENTS.has(e.name);
+    const isPlay = isRoundStart;
     const label = <P extends { key: string }>(points: P[]) => labelled(points, window.granularity, window.range.ms <= 86_400_000);
     const rounds = countSeries(events, window.since, window.until, window.granularity, isPlay);
-    const roomRounds = countSeries(events, window.since, window.until, window.granularity, (e) => e.name === "game_started");
-    const solo = countSeries(events, window.since, window.until, window.granularity, (e) => e.name === "quick_play_started" || e.name === "daily_quick_play_started");
+    // Split from one event's own payload rather than by counting a second
+    // event: a solo round emits BOTH game_started and a launch marker, so
+    // adding the markers would count it twice.
+    const soloRounds = countSeries(events, window.since, window.until, window.granularity, isSoloRound);
+    const groupRounds = countSeries(events, window.since, window.until, window.granularity, (e) => isRoundStart(e) && !isSoloRound(e));
     const rooms = countSeries(events, window.since, window.until, window.granularity, (e) => e.name === "room_created" || e.name === "room_reopened");
     const started = countWhere(events, isPlay);
     const finished = countWhere(events, (e) => e.name === "game_finished");
     const abandoned = countWhere(events, (e) => e.name === "game_abandoned" || e.name === "game_cancelled");
     const games = activityByGame(events);
+    // Launch markers describe rounds already counted above, so they are
+    // reported beside the round count rather than added to it.
+    const dailyLaunches = countWhere(events, (e) => e.name === LAUNCH_DAILY);
+    const quickLaunches = countWhere(events, (e) => e.name === LAUNCH_QUICK_PLAY);
     const totalPlayers = games.reduce((sum, game) => sum + game.players, 0);
     const roomStarts = games.reduce((sum, game) => sum + game.started, 0);
     const transports = countBy(events, (e) => (e.name === "room_created" ? (typeof e.payload?.transport === "string" ? e.payload.transport : "nearby") : null));
@@ -46,6 +53,7 @@ export default async function PlayPage({ searchParams }: { searchParams: SearchP
         {truncated && <Notice kind="warn">This window hit the event cap; counts below are a lower bound. Pick a shorter window.</Notice>}
         <div className="tiles">
           <StatTile label="Rounds started" value={compact(started)} note={`${compact(distinctActors(events, isPlay))} hosts/players`} />
+          <StatTile label="Launched from the Daily" value={compact(dailyLaunches)} note={`${compact(quickLaunches)} from Quick Play`} />
           <StatTile label="Rounds finished" value={compact(finished)} note={`${percent(finished, started)} completion`} />
           <StatTile label="Abandoned or cancelled" value={compact(abandoned)} note={percent(abandoned, started)} />
           <StatTile label="Avg players per round" value={roomStarts ? (totalPlayers / roomStarts).toFixed(1) : "—"} />
@@ -53,13 +61,13 @@ export default async function PlayPage({ searchParams }: { searchParams: SearchP
           <StatTile label="Avg round length" value={duration(finished ? games.reduce((sum, g) => sum + g.durationS, 0) / finished : null)} />
         </div>
         <div className="grid">
-          <Card title={`Rounds by ${window.granularity}`} subtitle="Room rounds are host-side starts; solo is Quick Play and the Daily." wide>
+          <Card title={`Rounds by ${window.granularity}`} subtitle="Every round emits one host-side start; the split is how many players were dealt in." wide>
             <LineChart
               series={[
-                { name: "room rounds", points: label(roomRounds), slot: 1 },
-                { name: "solo rounds", points: label(solo), slot: 2 },
+                { name: "two or more players", points: label(groupRounds), slot: 1 },
+                { name: "one player", points: label(soloRounds), slot: 2 },
               ]}
-              ariaLabel="Rounds started per bucket, room versus solo"
+              ariaLabel="Rounds started per bucket, split by how many players were dealt in"
             />
           </Card>
           <Card title="All rounds" subtitle="Room and solo together.">
@@ -75,7 +83,7 @@ export default async function PlayPage({ searchParams }: { searchParams: SearchP
           <Card title="When people play" subtitle="Rounds by weekday and hour, Pacific." wide>
             <Heatmap grid={grid} rowLabels={DAYS} colLabels={HOURS} ariaLabel="Rounds by weekday and hour" />
           </Card>
-          <Card title="Difficulty mode" subtitle="How room rounds were started.">
+          <Card title="Difficulty mode" subtitle="How rounds were started, room and solo alike.">
             <BarList rows={difficulty.map((row) => ({ label: row.name, value: row.count }))} ariaLabel="Rounds by difficulty mode" />
           </Card>
           <Card title="Rounds by game" subtitle="Proposed, started, finished; completion and length." wide>
@@ -89,6 +97,7 @@ export default async function PlayPage({ searchParams }: { searchParams: SearchP
                       <th>Game</th>
                       <th className="num">Proposed</th>
                       <th className="num">Started</th>
+                      <th className="num">Of those, Daily</th>
                       <th className="num">Finished</th>
                       <th className="num">Completion</th>
                       <th className="num">Abandoned</th>
@@ -103,6 +112,7 @@ export default async function PlayPage({ searchParams }: { searchParams: SearchP
                         <td>{gameName(game.gameId)}</td>
                         <td className="num">{game.proposed}</td>
                         <td className="num">{game.started}</td>
+                        <td className="num">{game.dailyLaunches || "—"}</td>
                         <td className="num">{game.finished}</td>
                         <td className="num">{percent(game.finished, game.started)}</td>
                         <td className="num">{game.abandoned + game.cancelled}</td>

@@ -26,13 +26,38 @@ export interface EventRow {
 export const EVENT_COLUMNS =
   "id, name, game_id, device_id, player_id, role, app_version, locale_region, occurred_at, received_at, payload";
 
-/** One round played = one host-side game_started; solo Quick Play and the
- * Daily start rounds of their own. */
-export const PLAY_EVENTS = new Set([
-  "game_started",
-  "quick_play_started",
-  "daily_quick_play_started",
-]);
+/** The one event that means a round actually began.
+ *
+ * Every path emits it. A room round emits it from AppModel.startGame(),
+ * and so does a solo or Daily quick play, because launchSoloGame() calls
+ * startGame() and only THEN emits its own launch marker. The markers
+ * below therefore accompany a game_started for the same round rather than
+ * representing extra rounds, and counting them as rounds counts every
+ * Daily and Quick Play twice. */
+export const ROUND_STARTED = "game_started";
+
+/** How a solo round was launched, emitted alongside the game_started for
+ * the same round. A marker with no game_started is a launch that failed to
+ * deal (the gate refused, or the round could not be created), which is
+ * correctly not a round. */
+export const LAUNCH_QUICK_PLAY = "quick_play_started";
+export const LAUNCH_DAILY = "daily_quick_play_started";
+export const LAUNCH_EVENTS = new Set([LAUNCH_QUICK_PLAY, LAUNCH_DAILY]);
+
+export const isRoundStart = (event: { name: string }): boolean =>
+  event.name === ROUND_STARTED;
+
+/** How many players a round started with, from game_started's payload.
+ * Defaults to 1 so a payload-less event is not mistaken for a full room. */
+export function roundPlayers(event: EventRow): number {
+  const players = Number(event.payload?.players);
+  return Number.isFinite(players) && players > 0 ? players : 1;
+}
+
+/** A round nobody else was dealt into. Solo covers Quick Play, the Daily,
+ * and a one-player round opened inside a room. */
+export const isSoloRound = (event: EventRow): boolean =>
+  isRoundStart(event) && roundPlayers(event) === 1;
 
 /** Events that mean something went wrong for a player (a quit round is
  * not one; game_abandoned lives on the Play page). Not crashes — the
@@ -156,10 +181,15 @@ export function countWhere(events: EventRow[], match: (event: EventRow) => boole
 export interface GameActivity {
   gameId: string;
   proposed: number;
+  /** Rounds that actually began (game_started). */
   started: number;
   finished: number;
   cancelled: number;
   abandoned: number;
+  /** Of `started`, how many were launched from the Daily and from Quick
+   * Play. These are a breakdown of `started`, never an addition to it. */
+  dailyLaunches: number;
+  quickLaunches: number;
   players: number;
   durationS: number;
   lastPlayed: string | null;
@@ -178,6 +208,8 @@ export function activityByGame(events: EventRow[]): GameActivity[] {
         finished: 0,
         cancelled: 0,
         abandoned: 0,
+        dailyLaunches: 0,
+        quickLaunches: 0,
         players: 0,
         durationS: 0,
         lastPlayed: null,
@@ -188,15 +220,20 @@ export function activityByGame(events: EventRow[]): GameActivity[] {
       case "game_proposed":
         row.proposed += 1;
         break;
-      case "game_started":
-      case "quick_play_started":
-      case "daily_quick_play_started": {
+      // Only game_started counts as a round; the launch markers below
+      // accompany one rather than adding to it.
+      case ROUND_STARTED: {
         row.started += 1;
-        const players = Number(event.payload?.players ?? 1);
-        row.players += Number.isFinite(players) ? players : 1;
+        row.players += roundPlayers(event);
         if (!row.lastPlayed || event.occurred_at > row.lastPlayed) row.lastPlayed = event.occurred_at;
         break;
       }
+      case LAUNCH_DAILY:
+        row.dailyLaunches += 1;
+        break;
+      case LAUNCH_QUICK_PLAY:
+        row.quickLaunches += 1;
+        break;
       case "game_finished": {
         row.finished += 1;
         const seconds = Number(event.payload?.duration_s ?? 0);
